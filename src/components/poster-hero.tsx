@@ -139,7 +139,7 @@ function HeroVisual({
         <img
           src={sceneSrc}
           alt={sceneAlt}
-          className="absolute inset-0 h-full w-full scale-105 object-cover object-center"
+          className="absolute inset-0 h-full w-full scale-105 object-cover object-[65%_50%]"
           draggable={false}
         />
         <div
