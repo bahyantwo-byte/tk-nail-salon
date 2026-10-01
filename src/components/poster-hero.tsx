@@ -134,27 +134,72 @@ function FitTitle({
   );
 }
 
+function ScrubVideo({
+  src,
+  poster,
+  progress,
+}: {
+  src: string;
+  poster: string;
+  progress: number;
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const durationRef = useRef(0);
+  const lastSetRef = useRef(-1);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const onLoaded = () => {
+      durationRef.current = video.duration || 0;
+    };
+    video.addEventListener("loadedmetadata", onLoaded);
+    if (video.readyState >= 1) onLoaded();
+    return () => video.removeEventListener("loadedmetadata", onLoaded);
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    const duration = durationRef.current;
+    if (!video || !duration) return;
+    const target = clamp01(progress) * duration;
+    // Skip redundant seeks — most browsers only decode a new frame when the
+    // requested time actually moves, but tiny deltas from the easing loop
+    // would otherwise trigger a seek every frame for no visible change.
+    if (Math.abs(target - lastSetRef.current) < 0.03) return;
+    lastSetRef.current = target;
+    video.currentTime = target;
+  }, [progress]);
+
+  return (
+    <video
+      ref={videoRef}
+      src={src}
+      poster={poster}
+      muted
+      playsInline
+      preload="auto"
+      aria-hidden
+      className="absolute inset-0 h-full w-full object-cover object-center"
+    />
+  );
+}
+
 function HeroVisual({
   title,
   sceneSrc,
-  sceneAlt,
+  scenePoster,
   revealProgress,
 }: {
   title: string;
   sceneSrc: string;
-  sceneAlt: string;
+  scenePoster: string;
   revealProgress: number;
 }) {
   return (
     <div className="relative h-full w-full overflow-hidden">
       <div className="absolute inset-0 z-0">
-        {/* eslint-disable-next-line @next/next/no-img-element -- pinned scroll layout needs a plain img inside a non-fixed-size container */}
-        <img
-          src={sceneSrc}
-          alt={sceneAlt}
-          className="hero-kenburns absolute inset-0 h-full w-full object-cover object-[65%_50%]"
-          draggable={false}
-        />
+        <ScrubVideo src={sceneSrc} poster={scenePoster} progress={revealProgress} />
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[var(--color-ink)]/10 via-transparent to-[var(--color-ink)]/20"
@@ -319,8 +364,8 @@ export function PosterHero() {
           <div className="@container relative min-h-0 flex-1 overflow-hidden [container-type:size]">
             <HeroVisual
               title="T&K"
-              sceneSrc="/images/hero-gel-manicure.jpg"
-              sceneAlt="Fresh white gel manicure"
+              sceneSrc="/videos/hero-process.mp4"
+              scenePoster="/images/hero-process-poster.jpg"
               revealProgress={progress}
             />
           </div>
