@@ -135,11 +135,26 @@ function FitTitle({
 }
 
 function AmbientVideo({ src, poster }: { src: string; poster: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const playOnFirstScroll = () => {
+      video.play().catch(() => {});
+    };
+    window.addEventListener("scroll", playOnFirstScroll, {
+      passive: true,
+      once: true,
+    });
+    return () => window.removeEventListener("scroll", playOnFirstScroll);
+  }, []);
+
   return (
     <video
+      ref={videoRef}
       src={src}
       poster={poster}
-      autoPlay
       loop
       muted
       playsInline
