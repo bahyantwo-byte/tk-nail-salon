@@ -134,48 +134,13 @@ function FitTitle({
   );
 }
 
-function ScrubVideo({
-  src,
-  poster,
-  progress,
-}: {
-  src: string;
-  poster: string;
-  progress: number;
-}) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const durationRef = useRef(0);
-  const lastSetRef = useRef(-1);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    const onLoaded = () => {
-      durationRef.current = video.duration || 0;
-    };
-    video.addEventListener("loadedmetadata", onLoaded);
-    if (video.readyState >= 1) onLoaded();
-    return () => video.removeEventListener("loadedmetadata", onLoaded);
-  }, []);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    const duration = durationRef.current;
-    if (!video || !duration) return;
-    const target = clamp01(progress) * duration;
-    // Skip redundant seeks — most browsers only decode a new frame when the
-    // requested time actually moves, but tiny deltas from the easing loop
-    // would otherwise trigger a seek every frame for no visible change.
-    if (Math.abs(target - lastSetRef.current) < 0.03) return;
-    lastSetRef.current = target;
-    video.currentTime = target;
-  }, [progress]);
-
+function AmbientVideo({ src, poster }: { src: string; poster: string }) {
   return (
     <video
-      ref={videoRef}
       src={src}
       poster={poster}
+      autoPlay
+      loop
       muted
       playsInline
       preload="auto"
@@ -199,7 +164,7 @@ function HeroVisual({
   return (
     <div className="relative h-full w-full overflow-hidden">
       <div className="absolute inset-0 z-0">
-        <ScrubVideo src={sceneSrc} poster={scenePoster} progress={revealProgress} />
+        <AmbientVideo src={sceneSrc} poster={scenePoster} />
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[var(--color-ink)]/10 via-transparent to-[var(--color-ink)]/20"
