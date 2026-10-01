@@ -134,52 +134,122 @@ function FitTitle({
   );
 }
 
-function AmbientVideo({ src, poster }: { src: string; poster: string }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
+function HeroAnimation() {
+  const [started, setStarted] = useState(false);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    const playOnFirstScroll = () => {
-      video.play().catch(() => {});
-    };
-    window.addEventListener("scroll", playOnFirstScroll, {
+    const startOnFirstScroll = () => setStarted(true);
+    window.addEventListener("scroll", startOnFirstScroll, {
       passive: true,
       once: true,
     });
-    return () => window.removeEventListener("scroll", playOnFirstScroll);
+    return () => window.removeEventListener("scroll", startOnFirstScroll);
   }, []);
 
+  const sparkleStyle: CSSProperties = {
+    transformBox: "fill-box",
+    transformOrigin: "center",
+    opacity: started ? undefined : 0,
+  };
+
   return (
-    <video
-      ref={videoRef}
-      src={src}
-      poster={poster}
-      loop
-      muted
-      playsInline
-      preload="auto"
-      aria-hidden
-      className="absolute inset-0 h-full w-full object-cover object-center"
-    />
+    <div className="absolute inset-0 flex items-center justify-center">
+      <svg
+        viewBox="0 0 400 300"
+        className="h-[62%] w-[62%] max-w-[420px]"
+        fill="none"
+        aria-hidden
+      >
+        {/* polish bottle */}
+        <g
+          stroke="var(--color-cream)"
+          strokeOpacity="0.55"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M90 180 L90 250 Q90 270 110 270 L140 270 Q160 270 160 250 L160 180 Z" />
+          <path d="M110 180 L110 150 L140 150 L140 180" />
+          <rect x="105" y="130" width="40" height="22" rx="4" />
+          <line x1="125" y1="130" x2="125" y2="92" />
+        </g>
+        <ellipse cx="125" cy="90" rx="8" ry="5" fill="var(--color-cream)" fillOpacity="0.55" />
+
+        {/* nail outline (rounded "squoval" silhouette) + polish fill reveal */}
+        <defs>
+          <clipPath id="nailClip">
+            <path d="M210 110 Q210 85 235 85 L275 85 Q300 85 300 110 L300 205 Q300 230 275 230 L235 230 Q210 230 210 205 Z" />
+          </clipPath>
+        </defs>
+        <rect
+          className={started ? "polish-fill" : undefined}
+          x="210"
+          y="80"
+          width="0"
+          height="155"
+          fill="var(--color-wine)"
+          clipPath="url(#nailClip)"
+        />
+        <path
+          d="M210 110 Q210 85 235 85 L275 85 Q300 85 300 110 L300 205 Q300 230 275 230 L235 230 Q210 230 210 205 Z"
+          stroke="var(--color-cream)"
+          strokeOpacity="0.55"
+          strokeWidth="2.5"
+        />
+
+        {/* brush stroke from bottle to nail */}
+        <path
+          className={started ? "brush-stroke" : undefined}
+          d="M125 88 C 165 55, 215 55, 255 86"
+          stroke="var(--color-wine)"
+          strokeWidth="4"
+          strokeLinecap="round"
+          pathLength={1}
+          strokeDasharray={1}
+          strokeDashoffset={1}
+        />
+
+        {/* sparkles */}
+        <g transform="translate(318,70)">
+          <path
+            className={started ? "sparkle sparkle-1" : undefined}
+            style={sparkleStyle}
+            d="M0 -8 L2 -2 L8 0 L2 2 L0 8 L-2 2 L-8 0 L-2 -2 Z"
+            fill="var(--color-blush)"
+          />
+        </g>
+        <g transform="translate(335,145)">
+          <path
+            className={started ? "sparkle sparkle-2" : undefined}
+            style={sparkleStyle}
+            d="M0 -6 L1.5 -1.5 L6 0 L1.5 1.5 L0 6 L-1.5 1.5 L-6 0 L-1.5 -1.5 Z"
+            fill="var(--color-blush)"
+          />
+        </g>
+        <g transform="translate(192,205)">
+          <path
+            className={started ? "sparkle sparkle-3" : undefined}
+            style={sparkleStyle}
+            d="M0 -6 L1.5 -1.5 L6 0 L1.5 1.5 L0 6 L-1.5 1.5 L-6 0 L-1.5 -1.5 Z"
+            fill="var(--color-blush)"
+          />
+        </g>
+      </svg>
+    </div>
   );
 }
 
 function HeroVisual({
   title,
-  sceneSrc,
-  scenePoster,
   revealProgress,
 }: {
   title: string;
-  sceneSrc: string;
-  scenePoster: string;
   revealProgress: number;
 }) {
   return (
-    <div className="relative h-full w-full overflow-hidden">
+    <div className="relative h-full w-full overflow-hidden bg-[var(--color-ink)]">
       <div className="absolute inset-0 z-0">
-        <AmbientVideo src={sceneSrc} poster={scenePoster} />
+        <HeroAnimation />
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[var(--color-ink)]/10 via-transparent to-[var(--color-ink)]/20"
@@ -342,12 +412,7 @@ export function PosterHero() {
       >
         <article className="@container relative flex h-full w-full min-h-0 flex-col overflow-hidden rounded-[1.75rem] bg-[var(--color-ink)] shadow-[0_30px_80px_-20px_rgba(37,26,28,0.5)]">
           <div className="@container relative min-h-0 flex-1 overflow-hidden [container-type:size]">
-            <HeroVisual
-              title="T&K"
-              sceneSrc="/videos/hero-process.mp4"
-              scenePoster="/images/hero-process-poster.jpg"
-              revealProgress={progress}
-            />
+            <HeroVisual title="T&K" revealProgress={progress} />
           </div>
 
           <div

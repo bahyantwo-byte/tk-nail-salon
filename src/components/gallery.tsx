@@ -3,10 +3,10 @@ import { VideoStrip } from "./video-strip";
 
 const PHOTOS = [
   { src: "/images/eyelash-extensions.jpg", alt: "Lash extensions by T&K", tall: true },
-  { src: "/images/manicure-1.jpg", alt: "Coral manicure" },
-  { src: "/images/dipping-powder.jpg", alt: "White dipping powder manicure" },
-  { src: "/images/manicure-3.jpg", alt: "Light blue manicure" },
-  { src: "/images/waxing.jpg", alt: "Waxing service essentials" },
+  { src: "/images/hero-process-poster.jpg", alt: "Nail art application in progress" },
+  { src: "/images/clip-hearts-poster.jpg", alt: "Finished heart nail art" },
+  { src: "/images/clip-galaxy-poster.jpg", alt: "Finished galaxy nail art" },
+  { src: "/images/clip-interior-poster.jpg", alt: "Inside T&K Nail Salon" },
 ];
 
 export function Gallery() {

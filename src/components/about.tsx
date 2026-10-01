@@ -7,8 +7,8 @@ export function About() {
         <div className="relative order-2 md:order-1">
           <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[2rem]">
             <Image
-              src="/images/manicure-2.jpg"
-              alt="Manicured hand holding a rose stem"
+              src="/images/clip-interior-poster.jpg"
+              alt="Inside T&K Nail Salon"
               fill
               sizes="(min-width: 768px) 45vw, 90vw"
               className="object-cover"

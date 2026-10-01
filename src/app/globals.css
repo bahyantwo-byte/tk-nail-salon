@@ -34,6 +34,72 @@ body {
   font-family: var(--font-body), ui-sans-serif, sans-serif;
 }
 
+@keyframes brush-paint {
+  0% {
+    stroke-dashoffset: 1;
+  }
+  40% {
+    stroke-dashoffset: 0;
+  }
+  70% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 1;
+  }
+}
+
+.brush-stroke {
+  animation: brush-paint 4s ease-in-out infinite;
+}
+
+@keyframes polish-reveal {
+  0% {
+    width: 0;
+  }
+  40% {
+    width: 95px;
+  }
+  85% {
+    width: 95px;
+  }
+  100% {
+    width: 0;
+  }
+}
+
+.polish-fill {
+  animation: polish-reveal 4s ease-in-out infinite;
+}
+
+@keyframes sparkle-twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.sparkle {
+  animation: sparkle-twinkle 2.4s ease-in-out infinite;
+}
+
+.sparkle-1 {
+  animation-delay: 0s;
+}
+
+.sparkle-2 {
+  animation-delay: 0.8s;
+}
+
+.sparkle-3 {
+  animation-delay: 1.6s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
