@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { VideoStrip } from "./video-strip";
 
 const PHOTOS = [
   { src: "/images/eyelash-extensions.jpg", alt: "Lash extensions by T&K", tall: true },
@@ -65,6 +66,8 @@ export function Gallery() {
           </div>
         ))}
       </div>
+
+      <VideoStrip />
     </section>
   );
 }
